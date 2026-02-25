@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Frontend Masters Course JSON Exporter",
+  "description": "Extract course courseData and lessons from Frontend Masters course pages and save as JSON.",
+  "version": "1.0.0",
+  "permissions": ["activeTab", "downloads", "scripting"],
+  "host_permissions": ["https://frontendmasters.com/*"],
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png"
+    },
+    "default_title": "Export Course JSON",
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://frontendmasters.com/courses/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Course JSON Exporter</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg-0: #12080a;
+        --bg-1: #1b0a0f;
+        --card: #1f1216;
+        --text-strong: #f6eaee;
+        --text-muted: #d4b8c1;
+        --line: #4d222c;
+        --brand-600: #cf2a41;
+        --brand-700: #971626;
+        --brand-soft: #3d1119;
+        --accent: #ff6e84;
+        --status-bg: #2a171d;
+        --status-line: #5e2b36;
+        --status-error-bg: #3a1117;
+        --status-error-line: #9e3244;
+        --status-error-text: #ffc7d1;
+      }
+
+      html,
+      body {
+        width: 560px;
+      }
+
+      body {
+        margin: 0;
+        min-height: 300px;
+        font-family: 'Avenir Next', 'Trebuchet MS', 'Gill Sans', sans-serif;
+        color: var(--text-strong);
+        background:
+          radial-gradient(
+            circle at 12% 8%,
+            rgba(255, 122, 145, 0.24),
+            transparent 32%
+          ),
+          radial-gradient(
+            circle at 88% 0%,
+            rgba(165, 22, 43, 0.32),
+            transparent 36%
+          ),
+          linear-gradient(150deg, var(--bg-0), var(--bg-1));
+      }
+
+      .shell {
+        box-sizing: border-box;
+        min-height: 100%;
+        padding: 16px;
+      }
+
+      .panel {
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        background: linear-gradient(
+          180deg,
+          rgba(38, 20, 26, 0.96),
+          rgba(30, 15, 20, 0.92)
+        );
+        box-shadow:
+          0 14px 30px rgba(0, 0, 0, 0.42),
+          0 4px 10px rgba(0, 0, 0, 0.3);
+        padding: 14px;
+        animation: enter 220ms ease-out;
+      }
+
+      .panel::before {
+        content: '';
+        position: absolute;
+        top: -26px;
+        right: -18px;
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(207, 42, 65, 0.28),
+          rgba(207, 42, 65, 0)
+        );
+        pointer-events: none;
+      }
+
+      .head {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        width: max-content;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 130, 150, 0.4);
+        background: var(--brand-soft);
+        color: #ffc5cf;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 4px 9px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 17px;
+        line-height: 1.25;
+        letter-spacing: 0.01em;
+      }
+
+      .subtitle {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .tips {
+        margin: 0 0 14px;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 7px;
+      }
+
+      .tips li {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        color: var(--text-muted);
+        font-size: 12px;
+        line-height: 1.3;
+      }
+
+      .tips li::before {
+        content: '•';
+        color: var(--accent);
+        font-size: 14px;
+        line-height: 1;
+      }
+
+      #exportBtn {
+        width: 100%;
+        border: 0;
+        border-radius: 12px;
+        padding: 11px 12px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.015em;
+        cursor: pointer;
+        color: #fff0f3;
+        background: linear-gradient(140deg, #d9344b, var(--brand-700));
+        box-shadow: 0 9px 18px rgba(151, 22, 38, 0.45);
+        transition:
+          transform 130ms ease,
+          box-shadow 130ms ease,
+          filter 130ms ease;
+      }
+
+      #exportBtn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 22px rgba(151, 22, 38, 0.5);
+        filter: saturate(1.05);
+      }
+
+      #exportBtn:active {
+        transform: translateY(0);
+      }
+
+      #exportBtn[disabled] {
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+        opacity: 0.7;
+      }
+
+      #status {
+        margin-top: 12px;
+        min-height: 36px;
+        border-radius: 11px;
+        background: var(--status-bg);
+        border: 1px solid var(--status-line);
+        padding: 9px 10px;
+        font-size: 12px;
+        line-height: 1.45;
+        color: #f0ccd4;
+      }
+
+      #status.error {
+        background: var(--status-error-bg);
+        border-color: var(--status-error-line);
+        color: var(--status-error-text);
+      }
+
+      .footnote {
+        margin: 10px 0 0;
+        font-size: 11px;
+        color: #a98590;
+      }
+
+      @keyframes enter {
+        from {
+          opacity: 0;
+          transform: translateY(5px) scale(0.985);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="panel">
+        <header class="head">
+          <span class="eyebrow">FrontendMasters Exporter</span>
+          <h1>Course JSON Export</h1>
+          <p class="subtitle">
+            Active course page data is parsed and saved as `slug.json` and
+            `slug-v2.json`.
+          </p>
+        </header>
+
+        <ul class="tips">
+          <li>Open a Frontend Masters course page in the active tab.</li>
+          <li>
+            Choose a folder when prompted, or files will download automatically.
+          </li>
+        </ul>
+
+        <button id="exportBtn" type="button">Extract And Save</button>
+        <div id="status" role="status" aria-live="polite">Ready.</div>
+        <p class="footnote">Version 1.0 • Local-only export</p>
+      </section>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>
