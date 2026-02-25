@@ -1,6 +1,6 @@
-# Frontend Masters Course JSON Exporter
+# Course JSON Exporter
 
-A small Chrome extension that extracts data from Frontend Masters course pages and saves JSON files locally.
+A small Chrome extension that extracts data from FrontendMasters course pages and saves JSON files locally.
 
 ## Output
 
