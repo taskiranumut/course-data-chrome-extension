@@ -223,10 +223,12 @@ function buildV2Payload(payload) {
       const duration = lesson && lesson.duration ? String(lesson.duration) : '';
       const lessonUrl =
         lesson && lesson.lessonUrl ? String(lesson.lessonUrl) : '';
+      const sectionTitle =
+        lesson && lesson.sectionTitle ? String(lesson.sectionTitle) : '';
 
       return {
         content: `${id}. ${title} []`,
-        description: `- Duration: ${duration} min\n- Url: ${lessonUrl}`,
+        description: `- Duration: ${duration} min\n- Section: ${sectionTitle}\n- Url: ${lessonUrl}`,
       };
     }),
   };
