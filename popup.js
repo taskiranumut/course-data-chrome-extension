@@ -3,7 +3,11 @@
 const exportButton = document.getElementById('exportBtn');
 const statusNode = document.getElementById('status');
 
-const COURSE_PAGE_RE = /^https:\/\/frontendmasters\.com\/courses\/[^/?#]+\/?/i;
+const COURSE_PAGE_RE = /^https:\/\/master\.dev\/courses\/[^/?#]+\/?/i;
+const V2_TASK_PROJECT_ID = '6g4h6vfWc5CWxMHh';
+const V2_TASK_SECTION_ID = '6g4Pw3jvHRfWhcW3';
+const V2_TASK_LABELS = ['Software'];
+const V2_TASK_PRIORITY = 'p4';
 
 /**
  * @typedef {Object} LessonData
@@ -209,7 +213,16 @@ function parseExtractResponse(response) {
  * Creates the v2 task format from extracted lesson data.
  *
  * @param {ExtractedPayload | null | undefined} payload
- * @returns {{tasks: {content: string, description: string}[]}}
+ * @returns {{
+ *   tasks: {
+ *     content: string,
+ *     description: string,
+ *     projectId: string,
+ *     sectionId: string,
+ *     labels: string[],
+ *     priority: string
+ *   }[]
+ * }}
  */
 function buildV2Payload(payload) {
   const lessons = Array.isArray(payload && payload.lessons)
@@ -229,6 +242,10 @@ function buildV2Payload(payload) {
       return {
         content: `${id}. ${title} []`,
         description: `- Duration: ${duration} min\n- Section: ${sectionTitle}\n- Url: ${lessonUrl}`,
+        projectId: V2_TASK_PROJECT_ID,
+        sectionId: V2_TASK_SECTION_ID,
+        labels: [...V2_TASK_LABELS],
+        priority: V2_TASK_PRIORITY,
       };
     }),
   };
